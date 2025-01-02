@@ -11,6 +11,7 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.config({
+    plugins: ["prettier", "import-helpers"],
     extends: ["next/core-web-vitals", "next/typescript", "prettier"],
     rules: {
       semi: "off",
@@ -22,6 +23,7 @@ const eslintConfig = [
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
       "prettier/prettier": "error",
+      "@typescript-eslint/no-unused-vars": "error",
       "import-helpers/order-imports": [
         "error",
         {
