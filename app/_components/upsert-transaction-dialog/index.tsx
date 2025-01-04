@@ -1,25 +1,19 @@
-"use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   TransactionCategory,
   TransactionPaymentMethod,
   TransactionType
 } from "@prisma/client"
-import { ArrowDownUpIcon } from "lucide-react"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 
-import { addTransaction } from "../_actions/add-transaction"
 import {
   TRANSACTION_CATEGORY_OPTIONS,
   TRANSACTION_PAYMENT_METHOD_OPTIONS,
   TRANSACTION_TYPE_OPTIONS
-} from "../_constants/transactions"
-import { MoneyInput } from "./money-input"
-import { Button } from "./ui/button"
-import { DatePicker } from "./ui/date-picker"
+} from "../../_constants/transactions"
+import { MoneyInput } from "../money-input"
+import { Button } from "../ui/button"
+import { DatePicker } from "../ui/date-picker"
 import {
   Dialog,
   DialogClose,
@@ -27,9 +21,8 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from "./ui/dialog"
+  DialogTitle
+} from "../ui/dialog"
 import {
   Form,
   FormControl,
@@ -37,48 +30,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from "./ui/form"
-import { Input } from "./ui/input"
+} from "../ui/form"
+import { Input } from "../ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "./ui/select"
+} from "../ui/select"
+import { formSchema } from "./schema"
+import { FormSchema, UpsertTransactionDialogProps } from "./types"
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "O nome é obrigatório"
-  }),
-  amount: z
-    .number({
-      required_error: "O valor é obrigatório"
-    })
-    .positive(),
-  type: z.nativeEnum(TransactionType, {
-    required_error: "O tipo é obrigatório"
-  }),
-  category: z.nativeEnum(TransactionCategory, {
-    required_error: "A categoria é obrigatória"
-  }),
-  paymentMethod: z.nativeEnum(TransactionPaymentMethod, {
-    required_error: "O método de pagamento é obrigatório"
-  }),
-  date: z.date({
-    required_error: "A data é obrigatória"
-  })
-})
-
-type FormSchema = z.infer<typeof formSchema>
-
-export function AddTransactionButton() {
-  const [dialogIsOpen, setDialogIsOpen] = useState(false)
-
+export function UpsertTransactionDialog({
+  isOpen,
+  setDialogIsOpen,
+  handleSubmitTransaction,
+  defaultValues,
+  transactionId,
+  title
+}: UpsertTransactionDialogProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      amount: 0,
+    defaultValues: defaultValues ?? {
+      amount: 1,
       category: TransactionCategory.OTHER,
       date: new Date(),
       name: "",
@@ -89,7 +64,7 @@ export function AddTransactionButton() {
 
   async function onSubmit(data: FormSchema) {
     try {
-      await addTransaction(data)
+      await handleSubmitTransaction({ ...data, id: transactionId })
       setDialogIsOpen(false)
       form.reset()
     } catch (error) {
@@ -98,23 +73,15 @@ export function AddTransactionButton() {
   }
 
   function handleClose() {
-    setDialogIsOpen(!dialogIsOpen)
+    setDialogIsOpen(!isOpen)
     form.reset()
   }
 
   return (
-    <Dialog open={dialogIsOpen} onOpenChange={handleClose}>
-      <DialogTrigger asChild>
-        <Button type="button" className="rounded-full">
-          <span className="font-bold">Adicionar transação</span>
-
-          <ArrowDownUpIcon />
-        </Button>
-      </DialogTrigger>
-
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Adicionar Transação</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
 
           <DialogDescription>Insira as informações abaixo</DialogDescription>
         </DialogHeader>

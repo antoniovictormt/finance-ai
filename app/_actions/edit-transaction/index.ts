@@ -5,11 +5,11 @@ import { revalidatePath } from "next/cache"
 import { db } from "@/app/_lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 
-import { addTransactionSchema } from "./schema"
-import { AddTransactionParams } from "./types"
+import { editTransactionSchema } from "./schema"
+import { EditTransactionParams } from "./types"
 
-export async function addTransaction(params: AddTransactionParams) {
-  addTransactionSchema.parse(params)
+export async function editTransaction(params: EditTransactionParams) {
+  editTransactionSchema.parse(params)
 
   const { userId } = await auth()
 
@@ -17,7 +17,10 @@ export async function addTransaction(params: AddTransactionParams) {
     throw new Error("Unauthorized")
   }
 
-  await db.transaction.create({
+  await db.transaction.update({
+    where: {
+      id: params.id
+    },
     data: {
       ...params,
       userId
