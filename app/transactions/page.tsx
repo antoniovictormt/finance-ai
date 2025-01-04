@@ -14,13 +14,16 @@ export default async function TransactionsPage() {
         <h1 className="text-2xl font-bold">Transações</h1>
 
         <Button className="rounded-full">
-          <span>Adicionar transação</span>
+          <span className="font-bold">Adicionar transação</span>
 
           <ArrowDownUpIcon />
         </Button>
       </div>
 
-      <DataTable columns={transactionsColumns} data={transactions} />
+      <DataTable
+        columns={transactionsColumns}
+        data={JSON.parse(JSON.stringify(transactions))}
+      />
     </div>
   )
 }
