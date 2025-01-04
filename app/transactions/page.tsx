@@ -10,11 +10,16 @@ import { transactionsColumns } from "./_columns"
 
 export default async function TransactionsPage() {
   const { userId } = await auth()
-  const transactions = await db.transaction.findMany({})
 
   if (!userId) {
     redirect("/login")
   }
+
+  const transactions = await db.transaction.findMany({
+    where: {
+      userId
+    }
+  })
 
   return (
     <>
