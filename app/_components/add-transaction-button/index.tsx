@@ -9,17 +9,16 @@ import {
 import { ArrowDownUpIcon } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 
-import { addTransaction } from "../_actions/add-transaction"
+import { addTransaction } from "../../_actions/add-transaction"
 import {
   TRANSACTION_CATEGORY_OPTIONS,
   TRANSACTION_PAYMENT_METHOD_OPTIONS,
   TRANSACTION_TYPE_OPTIONS
-} from "../_constants/transactions"
-import { MoneyInput } from "./money-input"
-import { Button } from "./ui/button"
-import { DatePicker } from "./ui/date-picker"
+} from "../../_constants/transactions"
+import { MoneyInput } from "../money-input"
+import { Button } from "../ui/button"
+import { DatePicker } from "../ui/date-picker"
 import {
   Dialog,
   DialogClose,
@@ -29,7 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "./ui/dialog"
+} from "../ui/dialog"
 import {
   Form,
   FormControl,
@@ -37,40 +36,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from "./ui/form"
-import { Input } from "./ui/input"
+} from "../ui/form"
+import { Input } from "../ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "./ui/select"
-
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "O nome é obrigatório"
-  }),
-  amount: z
-    .number({
-      required_error: "O valor é obrigatório"
-    })
-    .positive(),
-  type: z.nativeEnum(TransactionType, {
-    required_error: "O tipo é obrigatório"
-  }),
-  category: z.nativeEnum(TransactionCategory, {
-    required_error: "A categoria é obrigatória"
-  }),
-  paymentMethod: z.nativeEnum(TransactionPaymentMethod, {
-    required_error: "O método de pagamento é obrigatório"
-  }),
-  date: z.date({
-    required_error: "A data é obrigatória"
-  })
-})
-
-type FormSchema = z.infer<typeof formSchema>
+} from "../ui/select"
+import { formSchema } from "./schema"
+import { FormSchema } from "./types"
 
 export function AddTransactionButton() {
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
