@@ -18,6 +18,9 @@ export default async function TransactionsPage() {
   const transactions = await db.transaction.findMany({
     where: {
       userId
+    },
+    orderBy: {
+      createdAt: "desc"
     }
   })
 
