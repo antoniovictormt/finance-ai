@@ -76,8 +76,7 @@ export const getDashboard = async ({ from, to }: GetDashboardProps) => {
     await db.transaction.groupBy({
       by: ["category"],
       where: {
-        ...where,
-        type: TransactionType.EXPENSE
+        ...where
       },
       _sum: {
         amount: true

@@ -47,8 +47,6 @@ export function TimeSelect() {
         })
         .replace(/\//g, "-")
 
-      console.log("URL gerada:", `/?from=${fromFormatted}&to=${toFormatted}`)
-
       push(`/?from=${fromFormatted}&to=${toFormatted}`)
     } else {
       console.log("Intervalo ainda incompleto, aguardando seleção.")
