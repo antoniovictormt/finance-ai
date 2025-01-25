@@ -11,11 +11,13 @@ import {
 
 export const getDashboard = async ({ from, to }: GetDashboardProps) => {
   const { userId } = await auth()
+
   if (!userId) {
     throw new Error("Unauthorized")
   }
 
   const where = {
+    userId,
     date: {
       gte: new Date(parse(from, "dd-MM-yyyy", new Date())),
       lt: new Date(parse(String(to), "dd-MM-yyyy", new Date()))
