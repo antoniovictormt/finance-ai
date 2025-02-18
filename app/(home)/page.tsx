@@ -13,10 +13,10 @@ import { TimeSelect } from "./_components/time-select"
 import { TransactionsPieChart } from "./_components/transactions-pie-charts"
 
 interface HomeProps {
-  searchParams: {
+  searchParams: Promise<{
     from: string
     to?: string
-  }
+  }>
 }
 
 export default async function Home({ searchParams }: HomeProps) {
