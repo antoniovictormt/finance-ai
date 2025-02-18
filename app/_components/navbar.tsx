@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation"
 
 import { UserButton } from "@clerk/nextjs"
 
+import { getCurrentMonthRange } from "../_utils/currentMonthRange"
+
 export function Navbar() {
   const pathname = usePathname()
 
@@ -15,12 +17,17 @@ export function Navbar() {
     return "text-primary font-bold"
   }
 
+  const { firstDay, lastDay } = getCurrentMonthRange()
+
   return (
     <nav className="flex justify-between border-b border-solid px-8 py-4">
       <div className="flex items-center gap-10">
         <Image src="/logo.svg" alt="Finance-AI" width={173} height={39} />
 
-        <Link href="/" className={activeLink("/")}>
+        <Link
+          href={`/?from=${firstDay}&to=${lastDay}`}
+          className={activeLink("/")}
+        >
           Dashboard
         </Link>
         <Link href="/transactions" className={activeLink("/transactions")}>
