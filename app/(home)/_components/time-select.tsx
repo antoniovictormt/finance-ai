@@ -56,7 +56,7 @@ export function TimeSelect() {
 
       push(`/?from=${fromFormatted}&to=${toFormatted}`)
     } else {
-      console.log("Intervalo ainda incompleto, aguardando seleção.")
+      console.log("Intervalo ainda incompleto, aguardando seleção!")
     }
   }
 
