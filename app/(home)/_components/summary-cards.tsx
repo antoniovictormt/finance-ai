@@ -29,7 +29,7 @@ export async function SummaryCards({
         size="large"
       />
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <SummaryCard
           amount={investmentsTotal}
           icon={<PiggyBankIcon size={16} />}

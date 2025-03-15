@@ -5,6 +5,7 @@ import { isMatch } from "date-fns"
 
 import { Navbar } from "../_components/navbar"
 import { getDashboard } from "../_data/get-dashboard"
+import { getCurrentMonthRange } from "../_utils/currentMonthRange"
 import { ExpensesPerCategory } from "./_components/expenses-per-category"
 import { LastTransactions } from "./_components/last-transactions"
 import { SummaryCards } from "./_components/summary-cards"
@@ -12,10 +13,10 @@ import { TimeSelect } from "./_components/time-select"
 import { TransactionsPieChart } from "./_components/transactions-pie-charts"
 
 interface HomeProps {
-  searchParams: {
+  searchParams: Promise<{
     from: string
     to?: string
-  }
+  }>
 }
 
 export default async function Home({ searchParams }: HomeProps) {
@@ -28,8 +29,10 @@ export default async function Home({ searchParams }: HomeProps) {
   const monthIsInvalid =
     !from || !isMatch(from, dateString) || (to && !isMatch(to, dateString))
 
+  const { firstDay, lastDay } = getCurrentMonthRange()
+
   if (monthIsInvalid) {
-    redirect("/?from=01-01-2025&to=31-01-2025")
+    redirect(`/?from=${firstDay}&to=${lastDay}`)
   }
 
   if (!userId) {
@@ -45,16 +48,16 @@ export default async function Home({ searchParams }: HomeProps) {
     <>
       <Navbar />
 
-      <div className="flex flex-col space-y-6 overflow-hidden p-6">
-        <div className="flex justify-between">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+      <div className="mx-auto flex w-full max-w-7xl flex-col space-y-6 p-6 lg:overflow-hidden">
+        <div className="grid h-full grid-cols-1 gap-6 lg:grid-cols-[2fr,1fr] lg:overflow-hidden">
+          <h1 className="flex items-center justify-start text-2xl font-bold">
+            Dashboard
+          </h1>
           <TimeSelect />
-        </div>
 
-        <div className="grid h-full grid-cols-[2fr,1fr] gap-6 overflow-hidden">
           <div className="flex flex-col gap-6 overflow-hidden">
             <SummaryCards {...dashboard} />
-            <div className="grid h-full grid-cols-3 grid-rows-1 gap-6 overflow-hidden">
+            <div className="grid h-full grid-cols-1 grid-rows-1 gap-6 overflow-hidden lg:grid-cols-2">
               <TransactionsPieChart {...dashboard} />
 
               <ExpensesPerCategory
